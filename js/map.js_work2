@@ -1,0 +1,139 @@
+var mymap;
+var lyrOSM;
+var lyrPlayers;
+var lyrMarkerCluster;
+var lyrSearch;
+var ctlAttribute;
+var ctlSidebar;
+var ctlEasyButton;
+var ctlLayers
+var objOverlays;
+var arPlayerNames = [];
+
+
+
+
+    $(document).ready(function(){
+        
+        // Initialize Map
+        
+        mymap=L.map('mapdiv', {center:[38.7,-100.8], zoom:4});
+        lyrOSM =L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
+        mymap.addLayer(lyrOSM);
+        
+        ctlSidebar = L.control.sidebar('side-bar').addTo(mymap);
+            setTimeout(function () {
+                ctlSidebar.show();
+            }, 500);
+        
+        ctlEasyButton = L.easyButton('<img src ="img/menu.png">', function(){ ctlSidebar.toggle();}).addTo(mymap);
+        
+        // Initialize Layer
+        lyrMarkerCluster = L.markerClusterGroup();
+        lyrPlayers = L.geoJSON(players,{pointToLayer:returnPlayerMarker});
+        lyrPlayers.on('data:loaded', function(){
+                    arPlayerNames.sort(function(a,b){return a-b});
+                    $("#txtFindPlayer").autocomplete({
+                        source:arPlayerNames
+                    });
+        });
+        
+        lyrMarkerCluster.addLayer(lyrPlayers);
+        lyrMarkerCluster.addTo(mymap);
+            
+        
+        
+        
+        objOverlays = {
+            "2005 Players":lyrPlayers
+        }
+        
+          ctlLayers = L.control.layers(objOverlays).addTo(mymap);
+        
+        ctlAttribute = L.control.attribution({position:'bottomleft'}).addTo(mymap)
+        ctlAttribute.addAttribution('OSM');
+        
+        
+        
+    console.log('on load complete')
+        
+    
+       
+    });
+
+    // Layer functions
+    
+         function returnPlayerMarker(json, latlng){
+                var att = json.properties;
+                
+                att.index = att.first_name + " " + att.last_name;
+                arPlayerNames.push(att.index);
+                return L.circle(latlng, {radius:500, color:'red',fillColor:'yellow', fillOpacity:0.5}).bindPopup("<b>"+att.index+"</b>"+
+                            "<br>"+ "Position: "+att.position_+
+                            "<br>"+"College: "+att.schoolName +
+                            "<br>"+"Hometown: " +att.city +", "+att.state_abbr+
+                            "<br>"+"High School: "+att.highschool +
+                            "<br>"+"HS Graduation: "+att.recruitYea+
+                            "<br>"+"Rivals Profile: "+'<a href ="'+att.prospect_u+'" target="_blank">Link</a>'
+                           );
+            };
+
+        
+        $("#txtFindPlayer").on('keyup paste', function(){
+                var val = $("#txtFindPlayer").val();
+                testLayerAttribute(arPlayerNames, val, "Player Name", "#divFindPlayer", "#divPlayerError", "#btnFindPlayer");
+            });
+
+            $("#btnFindPlayer").click(function(){
+                var val = $("#txtFindPlayer").val();
+                var lyr = returnLayerByAttribute(lyrPlayers,'att.index',val);
+                if (lyr) {
+                    if (lyrSearch) {
+                        lyrSearch.remove();
+                    }
+                    
+                    lyrSearch = L.circle(lyr.getLatLng(), {radius:800, color:'red', weight:10, opacity:0.5, fillOpacity:0}).addTo(mymap);
+                    mymap.setView(lyr.getLatLng(), 4);
+                    var att = lyr.feature.properties;
+                    $("#divPlayerData").html("<h4 class='text-center'>Attributes</h4><h5>High School: "+att.highschool+"</h5><h5>Class of: "+att.recruitYea+"</h5><h5>College: "+att.schoolName+"</h5>");
+                    $("#divPlayerError").html("");
+                } else {
+                    $("#divPlayerError").html("**** Player not found ****");
+                }
+                
+            });
+            
+            $("#lblPlayer").click(function(){
+                $("#divPlayerData").toggle(); 
+           
+            });
+
+ 
+ 
+// **** General Functions
+console.log(arPlayerNames)
+     function returnLayerByAttribute(lyr,att,val) {
+                var arLayers = lyr.getLayers();
+                console.log(arLayers.length)
+                for (i=0;i<arLayers.length-1;i++) {
+                    var ftrVal = arLayers[i].feature.properties[att];
+                    if (ftrVal==val) {
+                        return arLayers[i];
+                    }
+                }
+                return false;
+            }
+            
+            function testLayerAttribute(ar, val, att, fg, err, btn) {
+                if (ar.indexOf(val)<0) {
+                    $(fg).addClass("has-error");
+                    $(err).html("**** "+att+" NOT FOUND ****");
+                    $(btn).attr("disabled", true);
+                } else {
+                    $(fg).removeClass("has-error");
+                    $(err).html("");
+                    $(btn).attr("disabled", false);
+                }
+            }
+        
+        
