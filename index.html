@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset = "UTF-8">
+        <title>AAarza Final Project</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+        integrity="sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+              crossorigin=""/>
+        <link rel="stylesheet" href ="src/plugins/easy-button.css">
+        <link rel="stylesheet" href ="src/plugins/L.Control.Sidebar.css">
+         <link rel="stylesheet" href="src/plugins/MarkerCluster.css">
+        <link rel="stylesheet" href="src/plugins/MarkerCluster.Default.css">
+        <link rel="stylesheet"  href="src/plugins/jquery-ui.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        <link rel="stylesheet" href="src/plugins/leaflet.zoomhome.css">
+        
+        <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+        integrity="sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+        crossorigin=""></script>
+        <script src ="https://code.jquery.com/jquery-3.2.1.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+        <script src = "src/plugins/easy-button.js"></script>
+        <script src = "src/plugins/L.Control.Sidebar.js"></script>
+        <script src="src/plugins/leaflet.markercluster.js"></script>
+        <script src="src/plugins/jquery-ui.min.js"></script>
+        <script src ="src/plugins/leaflet.zoomhome.min.js"></script>
+        
+        
+        <script src ="data/players.js"></script>
+        
+        <style>
+            #mapdiv {
+                height: 100vh;
+            },
+            
+        </style>
+    </head>
+    <body>
+
+       <div id="side-bar" style = "max-width: 85%; height:95vh">
+            <div id="divPlayer" class="col-xs-12">
+                <div id="divPlayerLabel" class="text-center col-xs-12">
+                    <h4 id="lblPlayer">The National Talent Mines</h4>
+                    <p> This map shows the high school locations of nation's top high school football players from 2002 to 2017. Player information and rankings were obtained from <a href="https://n.rivals.com/">Rivals.com.</a></p>
+                    
+                    <h5>Search for players by name</h5>
+                </div>
+                <div id="divPlayerError" class="errorMsg col-xs-12"></div>
+                <div id="divFindPlayer" class="form-group has-error">
+                    <div class="col-xs-6">
+                        <input type="text" id="txtFindPlayer" class="form-control" placeholder="Name">
+                    </div>
+                    <div class="col-xs-6">
+                        <button id="btnFindPlayer" class="btn btn-primary btn-block" disabled>Find Player</button>
+                    </div>
+                </div>
+                <div class="" id="divPlayerData"></div>
+            </div>
+           
+           <p class="col-xs-12" style = "position: absolute; bottom: 2px; text-align:center" >This Web GIS Application was created using <a href="http://leafletjs.com/">Leaflet</a> with a basemap from <a href="https://www.mapbox.com/">Mapbox</a> by Adam Araza for SSCI 591 Fall 2017 </p>
+        </div>
+    
+        <div id="mapdiv" class="col-md-12"></div>
+       
+     
+        
+        <script src="map.js"></script>
+    </body>
+</html>

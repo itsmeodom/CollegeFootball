@@ -1,0 +1,72 @@
+var mymap;
+var lyrOSM;
+var lyrMarkerCluster
+var lyrPlayers;
+var ctlAttribute;
+var ctlSidebar;
+var ctlEasyButton;
+var ctlLayers
+var objOverlays;
+
+
+
+
+    $(document).ready(function(){
+        
+        // Initialize Map
+        
+        mymap=L.map('mapdiv', {center:[38.7,-100.8], zoom:4});
+        lyrOSM =L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
+        mymap.addLayer(lyrOSM);
+        
+        ctlSidebar = L.control.sidebar('side-bar').addTo(mymap);
+            setTimeout(function () {
+                ctlSidebar.show();
+            }, 500);
+        
+        ctlEasyButton = L.easyButton('<img src ="img/menu.png">', function(){ ctlSidebar.toggle();}).addTo(mymap);
+        
+        // Initialize Layer
+        
+        lyrPlayers = L.geoJson(players, {
+        style: function (feature) {
+            return { color: feature.properties.color };
+        },
+        onEachFeature: function (feature, layer) {
+            var p = layer.feature.properties;
+            p.index = p.first_name + " " + p.last_name;
+            
+            layer.bindPopup("<b>"+p.index+"</b>"+
+                            "<br>"+ "Position: "+feature.properties.position_+
+                            "<br>"+"College: "+feature.properties.schoolName +
+                            "<br>"+"Hometown: " +feature.properties.city +", "+feature.properties.state_abbr+
+                            "<br>"+"High School: "+feature.properties.highschool +
+                            "<br>"+"HS Graduation: "+feature.properties.recruitYea+
+                            "<br>"+"Rivals Profile: "+'<a href ="'+feature.properties.prospect_u+'" target="_blank">Link</a>'
+                           );
+
+            }
+            }).addTo(mymap);
+        
+        objOverlays = {
+            "2005 Players":lyrPlayers
+        }
+        
+          ctlLayers = L.control.layers(objOverlays).addTo(mymap);
+        
+        ctlAttribute = L.control.attribution({position:'bottomleft'}).addTo(mymap)
+        ctlAttribute.addAttribution('OSM');
+        
+        
+        
+
+        
+        
+       
+    });
+
+    // Layer functions
+    
+    
+        
+        
